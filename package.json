@@ -1,0 +1,8 @@
+{
+  "name": "meyasubako",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:cases": "node scripts/build-cases.mjs"
+  }
+}

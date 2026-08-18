@@ -1,0 +1,38 @@
+name: Build cases.json
+
+on:
+  push:
+    paths:
+      - 'cases/**'
+      - 'scripts/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build cases.json
+        run: node scripts/build-cases.mjs
+
+      - name: Commit changes if any
+        run: |
+          git config user.name "meyasubako-bot"
+          git config user.email "meyasubako-bot@users.noreply.github.com"
+          if git diff --quiet -- docs/data/cases.json; then
+            echo "No changes to docs/data/cases.json"
+          else
+            git add docs/data/cases.json
+            git commit -m "chore: rebuild cases.json [skip ci]"
+            git push
+          fi
