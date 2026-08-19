@@ -25,7 +25,9 @@
   // Data state (populated by fetch on startup)
   // ---------------------------------------------------------------
   var CONFIG = {
-    siteName:'まこと目安箱', tagline:'あなたの困りごとが、政治を動かす。',
+    siteName:'まこと目安箱', tagline:'市民と議員のコミュニケーションの在り方をアップデート',
+    heroTitle:'LINEで地元の悩みを\n政治に届ける',
+    heroLead:'議員に会えなくても、\n困りごとはLINEで届きます。\n届いた声と、藤田まことがどう動いたかを、\nここで公開しています。',
     lineAddFriendUrl:'', officeName:'衆議院議員 藤田まこと事務所', officeUrl:'',
     district:'埼玉14区（草加・八潮・三郷）', repoUrl:''
   };
@@ -65,6 +67,12 @@
   function categoryChip(name){
     if (!name) return '';
     return '<span class="chip chip-category">' + esc(name) + '</span>';
+  }
+
+  // 改行位置の制御: 設定値の "\n" で区切った各文節を inline-block にし、
+  // 幅が足りるときは1行、足りないときは文節の切れ目でのみ折り返す。
+  function segs(str){
+    return String(str||'').split(/\n/).map(function(t){ return '<span class="seg">' + esc(t) + '</span>'; }).join('');
   }
 
   function caseCard(c){
@@ -145,8 +153,8 @@
     return '' +
     '<div class="hero">' +
       '<div class="wrap narrow">' +
-        '<h1>' + esc(CONFIG.tagline) + '</h1>' +
-        '<p class="lead">LINEで届いた地域の悩みを、事務所が受け止め、このサイトで公開しています。</p>' +
+        '<h1>' + segs(CONFIG.heroTitle || CONFIG.tagline) + '</h1>' +
+        '<p class="lead">' + segs(CONFIG.heroLead || '') + '</p>' +
         '<div class="btn-row">' +
           lineBtn +
           '<a href="#/cases" class="btn btn-outline">解決事例を見る</a>' +
