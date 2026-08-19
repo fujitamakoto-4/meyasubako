@@ -1,2 +1,8 @@
 node_modules/
 .DS_Store
+
+# 原本PDF等は公開しない（Vaultの .raw/陳情資料/ に保管）
+cases/**/*.pdf
+cases/**/*.docx
+cases/**/*.xlsx
+.DS_Store
