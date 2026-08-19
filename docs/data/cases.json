@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-19T16:07:11+09:00",
+  "generatedAt": "2026-08-19T16:14:21+09:00",
   "items": [
     {
       "id": "C-2026-003",
@@ -76,9 +76,9 @@
       ],
       "sources": "国土交通省 江戸川河川事務所・三郷市からの報告（2026年7月）",
       "publishedAt": "2026-08-18",
-      "hero": null,
-      "heroAlt": null,
-      "heroCaption": null,
+      "hero": "media/cases/inoshishi-misato/hero.jpg",
+      "heroAlt": "江戸川河川敷の堤防脇に設置された「イノシシ出没注意」の看板",
+      "heroCaption": "三郷市田中新田地先に設置された注意看板（2026年7月22日設置・写真：国土交通省 江戸川河川事務所提供）",
       "video": null,
       "videoId": null,
       "videoCaption": null,
@@ -110,6 +110,12 @@
             {
               "type": "p",
               "text": "7月22日に江戸川河川事務所が、7月24日には三郷市スポーツ振興課が看板を設置し、田中新田地先の計3か所に「イノシシ出没注意」の看板が立ちました（7月28日、河川事務所から設置完了の報告あり）。"
+            },
+            {
+              "type": "img",
+              "src": "media/cases/inoshishi-misato/sign-misato-city.jpg",
+              "alt": "河川敷グラウンド脇に三郷市スポーツ振興課が設置した注意看板",
+              "caption": "グラウンド脇の看板（2026年7月24日設置・三郷市スポーツ振興課／写真：江戸川河川事務所提供）"
             }
           ]
         },
