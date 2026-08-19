@@ -66,7 +66,7 @@
     var p = s.split('-');
     return p[0] + '年' + parseInt(p[1],10) + '月';
   }
-  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
   function categoryChip(name){
     if (!name) return '';
@@ -246,7 +246,7 @@
       '<section style="margin-top:36px;">' +
         '<div class="section-head">' +
           '<h1 class="section-title" style="font-size:1.6rem;">解決事例</h1>' +
-          '<p class="section-desc">寄せられたお悩みのうち、実際に動きがあり、解決に至ったものをストーリーとしてご紹介します。数は多くありませんが、一件ずつ丁寧にお伝えします。</p>' +
+          '<p class="section-desc">寄せられたお悩みから、解決に至った事例をご紹介します。</p>' +
         '</div>' +
         body +
       '</section>' +
@@ -402,7 +402,7 @@
     '<div class="wrap">' +
       '<section style="margin-top:36px;">' +
         '<div class="section-head">' +
-          '<h1 class="section-title" style="font-size:1.6rem;">数字で見る藤田まこと</h1>' +
+          '<h1 class="section-title" style="font-size:1.6rem;">数字で見る埼玉14区 目安箱</h1>' +
           '<p class="section-desc">件数のみを公開しています。解決率などの指標は掲載しません。</p>' +
         '</div>' +
         '<div class="chart-card">' +
@@ -431,19 +431,19 @@
         '</div>' +
         '<div class="layer-list">' +
           '<div class="layer-item">' +
-            '<h3>① お悩みは、NG以外すべて公開します</h3>' +
-            '<p>個人が特定される情報（お名前・番地・勤務先など）を伏せたうえで、できるだけ原文に近い形で公開します。NG＝誹謗中傷・特定の個人や団体への攻撃・クレーム的なもの・公序良俗に反するもの・営業目的のものに限り、件数にも含めません。</p>' +
+            '<h2>① お悩みは、事務所にて内容を確認の上、公開します</h2>' +
+            '<p>個人が特定される情報（お名前・番地・勤務先など）を伏せたうえで、できるだけ原文に近い形で公開します。公開しないもの＝誹謗中傷・特定の個人や団体への攻撃・クレーム的なもの・公序良俗に反するもの・営業目的のものに限り、件数にも含めません。</p>' +
           '</div>' +
           '<div class="layer-item">' +
-            '<h3>② 件数も公開します</h3>' +
+            '<h2>② 件数も公開します</h2>' +
             '<p>月次・カテゴリ別・市別の件数を「数字で見る」でそのまま公開します。</p>' +
           '</div>' +
           '<div class="layer-item">' +
-            '<h3>③ 解決したものは「解決事例」として紹介します</h3>' +
+            '<h2>③ 解決したものは「解決事例」として紹介します</h2>' +
             '<p>解決率などの数字は出しません。実際に動きがあり解決に至ったものだけを、一件ずつストーリーでお伝えします。</p>' +
           '</div>' +
           '<div class="layer-item">' +
-            '<h3>④ 公開を望まない方の意思を尊重します</h3>' +
+            '<h2>④ 公開を望まない方の意思を尊重します</h2>' +
             '<p>LINEで相談する際に公開の可能性をお知らせし、希望があれば掲載しません。公開を望まない方の内容は掲載せず、件数にのみ含めます。</p>' +
           '</div>' +
         '</div>' +
@@ -458,24 +458,23 @@
   function renderMechanism(){
     var repoLink = CONFIG.repoUrl ? '<a href="' + esc(CONFIG.repoUrl) + '" target="_blank" rel="noopener">' + esc(CONFIG.repoUrl) + '</a>' : '（準備中）';
     return '' +
-    '<div class="wrap narrow">' +
+    '<div class="wrap narrow mech">' +
       '<section style="margin-top:36px;">' +
         '<div class="section-head">' +
           '<h1 class="section-title" style="font-size:1.6rem;">仕組み</h1>' +
-          '<p class="section-desc">LINEでの相談から、このサイトでの公開までの流れです。</p>' +
+          '<p class="section-desc">相談の受付から、このサイトでの公開までの流れです。</p>' +
         '</div>' +
         '<div class="flow-diagram">' +
-          '<div class="flow-step">LINE<br>（相談を送る）</div>' +
-          '<div class="flow-arrow">→</div>' +
-          '<div class="flow-step">事務所<br>（NGの判定・個人情報を伏せる）</div>' +
-          '<div class="flow-arrow">→</div>' +
-          '<div class="flow-step">GitHub<br>（公開データを管理）</div>' +
-          '<div class="flow-arrow">→</div>' +
-          '<div class="flow-step">このサイト<br>（お悩み・件数・解決事例を掲載）</div>' +
+          '<div class="flow-step"><strong>LINE</strong><span>相談を送る</span></div>' +
+          '<div class="flow-arrow" aria-hidden="true">→</div>' +
+          '<div class="flow-step"><strong>事務所</strong><span>内容の確認</span></div>' +
+          '<div class="flow-arrow" aria-hidden="true">→</div>' +
+          '<div class="flow-step"><strong>GitHub</strong><span>公開データを管理</span></div>' +
+          '<div class="flow-arrow" aria-hidden="true">→</div>' +
+          '<div class="flow-step"><strong>このサイト</strong><span>お悩み・件数・<br>解決事例を掲載</span></div>' +
         '</div>' +
-        '<p style="font-size:0.94rem;">相談の受付・やりとりはすべてLINE上で完結します。事務所がNGにあたらないかを判定し、個人が特定される情報を伏せたうえで、GitHub（ソフトウェア開発でよく使われる情報公開の仕組み）で公開データを管理し、このサイトに「みんなのお悩み」「数字で見る」「解決事例」として表示しています。</p>' +
+        '<p style="font-size:0.94rem;">相談の受付はLINEおよび直接承っております。事務所が内容を確認し、個人が特定される情報を伏せたうえで公開しております。また公開データの管理は、GitHub（ソフトウェア開発でよく使われる情報公開の仕組み）を活用し、このサイトに「みんなのお悩み」「数字で見る」「解決事例」として表示しています。</p>' +
         '<div class="notice-box"><strong>オープンソースの考え方で運営しています（GitHubで管理）。</strong> 公開する情報の記録・更新履歴は誰でも確認できます。リポジトリ：' + repoLink + '</div>' +
-        '<p style="font-size:0.86rem;color:var(--muted);">この仕組みは、2024〜2025年にチームみらい（安野たかひろ氏）がGitHubを用いた政策提案の透明化で示した知見を参考にしています。相談の受付そのものはLINEに一本化し、GitHubは「公開のための場所」として使う設計です。</p>' +
       '</section>' +
     '</div>';
   }
@@ -507,6 +506,13 @@
     if (footerDistrict) footerDistrict.textContent = CONFIG.district || '';
     var footerTitle = document.getElementById('footerTitle');
     if (footerTitle) footerTitle.textContent = CONFIG.siteName;
+    var footerLine = document.getElementById('footerLine');
+    if (footerLine){
+      if (CONFIG.lineAddFriendUrl){ footerLine.setAttribute('href', CONFIG.lineAddFriendUrl); }
+      else { footerLine.removeAttribute('href'); }
+    }
+    var footerSite = document.getElementById('footerSite');
+    if (footerSite && CONFIG.officeUrl) footerSite.setAttribute('href', CONFIG.officeUrl);
 
     var banner = document.getElementById('sampleBanner');
     if (banner){

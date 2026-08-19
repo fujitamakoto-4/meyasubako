@@ -203,7 +203,9 @@ function main(){
       steps
     };
 
-    if (isDraft(fm.publishedAt)) {
+    // draft: true / status: draft を明示した事例は publishedAt に関わらず非公開
+    const forcedDraft = String(fm.draft || '').toLowerCase() === 'true' || String(fm.status || '').toLowerCase() === 'draft';
+    if (forcedDraft || isDraft(fm.publishedAt)) {
       drafts.push(file);
       continue;
     }
