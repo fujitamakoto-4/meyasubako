@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-19T16:14:21+09:00",
+  "generatedAt": "2026-08-19T17:26:00+09:00",
   "items": [
     {
       "id": "C-2026-003",
@@ -142,11 +142,11 @@
       "receiptIds": [
         "L-2026-002"
       ],
-      "sources": "藤田まこと事務所の対応記録（2026年5月）",
+      "sources": "藤田まこと事務所の対応記録（2026年5月）、藤田まことX投稿（2026年5月3日）",
       "publishedAt": "2026-08-18",
-      "hero": null,
-      "heroAlt": null,
-      "heroCaption": null,
+      "hero": "media/cases/tosou-yashio/hero.png",
+      "heroAlt": "経済産業省「中東情勢関連対策ワンストップポータル」の「中東情勢を踏まえた石油及び関連製品等に関する対応」バナー",
+      "heroCaption": "経済産業省が開設した「中東情勢関連対策ワンストップポータル」。石油由来の化学品・製品等の供給に関する情報提供窓口が設けられました（出典：経済産業省ウェブサイト、バナー画像を一部トリミング）",
       "video": null,
       "videoId": null,
       "videoCaption": null,
