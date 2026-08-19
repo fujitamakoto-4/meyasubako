@@ -334,30 +334,38 @@
     var relatedVoices = (c.receiptIds||[]).map(byVoiceId).filter(function(v){ return !!v; });
     var relatedHtml = '';
     if (relatedVoices.length){
-      relatedHtml = '<div class="section-head" style="margin-top:34px;"><h2 class="section-title" style="font-size:1.1rem;">この事例に関係するお悩み</h2></div>' +
+      relatedHtml = '<aside class="related-voices" aria-label="この事例に関係するお悩み">' +
+        '<h2 class="related-voices-title">この事例に関係するお悩み</h2>' +
         relatedVoices.map(function(v){
           var slugForCat = categorySlugByName(v.category);
           return '<a class="related-voice-card" href="#/voices/' + esc(slugForCat||'') + '">' +
             '<div class="voice-card-meta">' + esc(v.city) + '　｜　受付：' + formatMonth(v.month) + '　｜　' + esc(v.id) + '</div>' +
             '<p class="voice-card-text" style="margin-top:4px;">' + esc(v.text) + '</p>' +
           '</a>';
-        }).join('');
+        }).join('') +
+      '</aside>';
     }
 
+    // タイトルは「——」の前後で文節を分け、折り返しはその位置を優先する
+    var titleHtml = String(c.title||'').split(/(——)/).reduce(function(acc, part){
+      if (part === '——'){ acc[acc.length-1] += part; } else if (part) { acc.push(part); }
+      return acc;
+    }, ['']).filter(Boolean).map(function(t){ return '<span class="seg">' + esc(t) + '</span>'; }).join('');
+
     return '' +
-    '<div class="wrap narrow">' +
+    '<div class="wrap article">' +
       '<section style="margin-top:36px;">' +
         '<a href="#/cases" class="back-link">← 解決事例に戻る</a>' +
         '<div class="article-header">' +
           '<div class="chip-row">' + categoryChip(c.category) + '</div>' +
-          '<h1>' + esc(c.title) + '</h1>' +
+          '<h1>' + titleHtml + '</h1>' +
           '<div class="article-meta-row" style="color:var(--muted);font-size:0.86rem;">' + esc(c.city) + '　｜　受付：' + formatMonth(c.month) + '</div>' +
         '</div>' +
         caseHeroHtml(c) +
         caseVideoHtml(c) +
+        relatedHtml +
         '<div class="story-list">' + steps + '</div>' +
         '<p class="article-footnote">出典：' + esc(c.sources||'') + '</p>' +
-        relatedHtml +
       '</section>' +
     '</div>';
   }
