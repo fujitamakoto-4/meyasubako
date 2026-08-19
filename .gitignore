@@ -6,3 +6,7 @@ cases/**/*.pdf
 cases/**/*.docx
 cases/**/*.xlsx
 .DS_Store
+
+# 動画ファイルはリポジトリに置かない（YouTubeへアップロードし、videoにURLを書く）
+docs/media/**/*.mp4
+docs/media/**/*.mov

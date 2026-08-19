@@ -68,6 +68,8 @@ LINE（相談を送る）
 
 `cases/*.md` から `scripts/build-cases.mjs` が生成します。直接編集しないでください。
 
+frontmatterの `hero` / `heroAlt` / `heroCaption` / `video` / `videoId`（`video`のYouTube URLから自動抽出） / `videoCaption` が各itemに追加されています（未指定なら `null`）。また各 `steps[]` に、本文を段落・画像ブロックの列に分解した `blocks`（`{type:'p', text}` または `{type:'img', src, alt, caption}`）が追加されています。従来の `steps[].p`（画像を除いたテキストを結合した文字列）は後方互換のため引き続き出力されます。`voices.json` / `stats.json` のスキーマに変更はありません。
+
 ## 解決事例の追加方法
 
 1. `cases/` 以下に `C-YYYY-NNN-slug.md` という名前でMarkdownファイルを作成する（書式は既存ファイルを参照）。
@@ -77,6 +79,42 @@ LINE（相談を送る）
 5. ローカルで確認したい場合は `npm run build:cases`（または `node scripts/build-cases.mjs`）を実行してください。依存パッケージのインストールは不要です。
 
 担当者個人名・メールアドレス・電話番号は本文に書かないでください。
+
+### 画像・動画を追加する（任意）
+
+アイキャッチ画像・本文内画像・YouTube動画は、すべて任意項目です。書かなければ従来どおりテキストのみの事例として表示されます。
+
+**アイキャッチ画像・動画（frontmatterに追加）**
+
+```yaml
+hero: media/cases/inoshishi-misato/hero.jpg
+heroAlt: 江戸川河川敷に設置された「イノシシ出没注意」の看板
+heroCaption: 三郷市田中新田地先に設置された注意看板（2026年7月・国土交通省 江戸川河川事務所提供）
+video: https://www.youtube.com/watch?v=XXXXXXXXXXX
+videoCaption: 現地の様子（2026年7月）
+```
+
+- `hero` / `heroAlt` / `heroCaption` はセットで使う（`hero` だけでも可。`heroAlt`が無いと空のalt属性になるので、画像に意味がある場合は書くこと）。タイトル・市/受付月の直下、ストーリーの上に表示されます。
+- `video` はYouTubeのURL（`watch?v=`／`youtu.be/`／`shorts/` のいずれの形式でも可）。サイトにはYouTubeのサムネイル画像＋再生ボタン風の表示のみを埋め込み、クリックすると新しいタブでYouTubeが開きます（iframe埋め込みはしません＝閲覧者に余計なCookieを付けない・軽量）。`videoCaption` は任意。
+- 動画ファイル自体はこのリポジトリに置かないでください（YouTubeにアップロードしてURLを書く）。誤って `.mp4` / `.mov` をコミットしないよう `.gitignore` で除外しています。
+- 画像が用意できない事例では、`hero` 等の行を空値で書かず、frontmatter自体に追加しないでください（空値はYAML的な扱いが曖昧になるため）。
+
+**本文内の画像（Markdown本文に挿入）**
+
+`## 受付` などの各セクション内の好きな位置に、通常のMarkdown画像記法で1行として書く。
+
+```markdown
+![看板3か所の位置図](media/cases/inoshishi-misato/map.jpg "設置箇所の位置図（国土交通省 江戸川河川事務所提供）")
+```
+
+- `[ ]` 内が代替テキスト（alt）、`( )` 内が画像パス、末尾の `" "` は任意のキャプション（省略可）。
+- 画像の前後にある文章はそのまま段落として表示され、画像はその位置に差し込まれます。
+
+**画像ファイルの置き場所**
+
+- `docs/media/cases/<slug>/` 以下に置く（例: `docs/media/cases/inoshishi-misato/hero.jpg`）。frontmatter・本文の画像パスは、いずれも `docs/` からの相対パス（例: `media/cases/<slug>/hero.jpg`）で書く。
+- 1枚1MB以下・横1200px程度・JPG/WebP推奨。
+- 存在しないパスを指定すると、`node scripts/build-cases.mjs` 実行時に警告ログが出ます（ビルド自体は止まりません）。プレビューでは画像が表示されないだけなので、パスを見直してください。
 
 ## 公開の考え方
 
