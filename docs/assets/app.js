@@ -25,11 +25,15 @@
   // Data state (populated by fetch on startup)
   // ---------------------------------------------------------------
   var CONFIG = {
-    siteName:'まこと目安箱', tagline:'市民と議員のコミュニケーションの在り方をアップデート',
+    siteName:'埼玉14区 目安箱', tagline:'市民と議員のコミュニケーションの在り方をアップデート',
     heroTitle:'LINEで地元の悩みを\n政治に届ける',
     heroLead:'議員に会えなくても、\n困りごとはLINEで届きます。\n届いた声と、藤田まことがどう動いたかを、\nここで公開しています。',
-    lineAddFriendUrl:'', officeName:'衆議院議員 藤田まこと事務所', officeUrl:'',
-    district:'埼玉14区（草加・八潮・三郷）', repoUrl:''
+    heroPhoto:'', heroPhotoAlt:'', heroPhotoCaption:'',
+    memberName:'藤田まこと', memberTitle:'衆議院議員', party:'自由民主党',
+    district:'埼玉14区（草加市・八潮市・三郷市）', districtShort:'草加・八潮・三郷',
+    profilePhoto:'', profileText:'',
+    lineAddFriendUrl:'', officeName:'自由民主党 衆議院議員 藤田まこと事務所', officeUrl:'',
+    repoUrl:''
   };
   var VOICES = { generatedAt:null, sample:false, items:[] };
   var STATS = { generatedAt:null, sample:false, total:0, published:0, thisMonth:0, byCategory:{}, byCity:{}, monthly:[] };
@@ -150,16 +154,30 @@
       ? '<a href="' + esc(CONFIG.lineAddFriendUrl) + '" target="_blank" rel="noopener" class="btn btn-primary">💬 LINEで相談する</a>'
       : '<span class="btn btn-disabled" aria-disabled="true">💬 LINEで相談する（準備中）</span>';
 
+    var eyebrow = '<p class="eyebrow">' +
+        '<span class="eyebrow-party">' + esc(CONFIG.party) + '</span>' +
+        '<span class="seg">' + esc(CONFIG.memberTitle) + ' ' + esc(CONFIG.memberName) + '</span>' +
+        '<span class="seg">（' + esc(CONFIG.district) + '）が運営</span>' +
+      '</p>';
+    var heroPhoto = CONFIG.heroPhoto
+      ? '<figure class="hero-photo"><img src="' + esc(CONFIG.heroPhoto) + '" alt="' + esc(CONFIG.heroPhotoAlt||'') + '" width="960" height="800">' +
+          (CONFIG.heroPhotoCaption ? '<figcaption>' + esc(CONFIG.heroPhotoCaption) + '</figcaption>' : '') + '</figure>'
+      : '';
+
     return '' +
     '<div class="hero">' +
-      '<div class="wrap narrow">' +
-        '<h1>' + segs(CONFIG.heroTitle || CONFIG.tagline) + '</h1>' +
-        '<p class="lead">' + segs(CONFIG.heroLead || '') + '</p>' +
-        '<div class="btn-row">' +
-          lineBtn +
-          '<a href="#/cases" class="btn btn-outline">解決事例を見る</a>' +
+      '<div class="wrap hero-grid' + (heroPhoto ? ' has-photo' : '') + '">' +
+        '<div class="hero-text">' +
+          eyebrow +
+          '<h1>' + segs(CONFIG.heroTitle || CONFIG.tagline) + '</h1>' +
+          '<p class="lead">' + segs(CONFIG.heroLead || '') + '</p>' +
+          '<div class="btn-row">' +
+            lineBtn +
+            '<a href="#/cases" class="btn btn-outline">解決事例を見る</a>' +
+          '</div>' +
+          '<p class="btn-note">いただいたお悩みは、個人が特定される情報を伏せた上で原文に近い形で公開しています。公開を望まれない場合は、その旨をお書きください（掲載しません）。</p>' +
         '</div>' +
-        '<p class="btn-note">いただいたお悩みは、個人が特定される情報を伏せた上で原文に近い形で公開しています。公開を望まれない場合は、その旨をお書きください（掲載しません）。</p>' +
+        heroPhoto +
       '</div>' +
     '</div>' +
     '<div class="wrap">' +
@@ -186,7 +204,37 @@
         caseSection +
         '<div class="btn-row" style="margin-top:16px;"><a href="#/cases" class="btn btn-outline">解決事例を見る</a></div>' +
       '</section>' +
+      renderOperator() +
     '</div>';
+  }
+
+  // トップ末尾「運営について」: 誰が運営しているか（政党・院・選挙区・市）を明示する
+  function renderOperator(){
+    var photo = CONFIG.profilePhoto
+      ? '<img class="operator-photo" src="' + esc(CONFIG.profilePhoto) + '" alt="' + esc(CONFIG.memberName) + '" width="600" height="720" loading="lazy">'
+      : '';
+    var site = CONFIG.officeUrl
+      ? '<a href="' + esc(CONFIG.officeUrl) + '" target="_blank" rel="noopener" class="btn btn-outline">公式サイトを見る</a>'
+      : '';
+    var line = CONFIG.lineAddFriendUrl
+      ? '<a href="' + esc(CONFIG.lineAddFriendUrl) + '" target="_blank" rel="noopener" class="btn btn-primary">💬 LINEで相談する</a>'
+      : '';
+    return '' +
+      '<section>' +
+        '<div class="section-head">' +
+          '<h2 class="section-title">運営について</h2>' +
+        '</div>' +
+        '<div class="operator-card">' +
+          photo +
+          '<div class="operator-body">' +
+            '<p class="operator-kicker">' + esc(CONFIG.party) + '　' + esc(CONFIG.memberTitle) + '</p>' +
+            '<p class="operator-name">' + esc(CONFIG.memberName) + '</p>' +
+            '<p class="operator-district">' + esc(CONFIG.district) + '</p>' +
+            (CONFIG.profileText ? '<p class="operator-text">' + esc(CONFIG.profileText) + '</p>' : '') +
+            '<div class="btn-row">' + line + site + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</section>';
   }
 
   function renderCases(){
@@ -447,6 +495,7 @@
     var titleEl = document.getElementById('siteTitle');
     var taglineEl = document.getElementById('siteTagline');
     if (titleEl) titleEl.textContent = CONFIG.siteName;
+    document.title = CONFIG.siteName + '｜' + CONFIG.officeName;
     if (taglineEl) taglineEl.textContent = CONFIG.tagline;
 
     var footerOffice = document.getElementById('footerOffice');
@@ -456,6 +505,8 @@
     }
     var footerDistrict = document.getElementById('footerDistrict');
     if (footerDistrict) footerDistrict.textContent = CONFIG.district || '';
+    var footerTitle = document.getElementById('footerTitle');
+    if (footerTitle) footerTitle.textContent = CONFIG.siteName;
 
     var banner = document.getElementById('sampleBanner');
     if (banner){

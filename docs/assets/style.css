@@ -111,7 +111,21 @@ section{ margin-top:48px; }
   padding:34px 0 30px;
   border-bottom:1px solid var(--line);
 }
-.hero .narrow{ max-width:800px; }
+.hero-grid{ display:grid; grid-template-columns:1fr; gap:24px; align-items:center; }
+@media (min-width:860px){ .hero-grid.has-photo{ grid-template-columns:minmax(0,1fr) 340px; gap:40px; } }
+.hero-text{ max-width:760px; }
+.eyebrow{
+  display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px;
+  font-size:0.82rem; color:var(--navy); font-weight:600; margin:0 0 12px;
+}
+.eyebrow-party{
+  display:inline-block; background:var(--navy); color:#fff; border-radius:4px;
+  padding:1px 8px; font-size:0.76rem; letter-spacing:.04em;
+}
+.hero-photo{ margin:0; }
+.hero-photo img{ width:100%; height:auto; border-radius:14px; box-shadow:0 10px 28px rgba(11,42,91,.16); }
+.hero-photo figcaption{ font-size:0.72rem; color:var(--muted); margin-top:6px; text-align:right; }
+@media (max-width:859px){ .hero-photo img{ aspect-ratio:16/9; object-fit:cover; object-position:center 35%; } }
 .hero h1{
   font-size:1.85rem;
   line-height:1.35;
@@ -124,6 +138,7 @@ section{ margin-top:48px; }
   margin-bottom:18px;
 }
 .hero .seg{ display:inline-block; }
+.eyebrow .seg{ margin-right:0; }
 .btn{
   display:inline-flex;
   align-items:center;
@@ -461,3 +476,16 @@ table.kv-table th{ background:var(--blue-soft); color:var(--navy); width:8.5em; 
 }
 .site-footer a{ color:#fff; }
 .site-footer .footer-title{ color:#fff; font-weight:700; font-size:0.95rem; margin-bottom:6px; }
+
+/* ---- operator (運営について) ---- */
+.operator-card{
+  display:grid; grid-template-columns:1fr; gap:18px;
+  background:var(--white); border:1px solid var(--line); border-radius:14px; padding:20px;
+}
+@media (min-width:640px){ .operator-card{ grid-template-columns:180px minmax(0,1fr); gap:26px; padding:24px; } }
+.operator-photo{ width:160px; height:192px; object-fit:cover; border-radius:10px; }
+@media (min-width:640px){ .operator-photo{ width:180px; height:216px; } }
+.operator-kicker{ margin:0; font-size:0.84rem; color:var(--muted); font-weight:600; }
+.operator-name{ margin:0; font-size:1.5rem; font-weight:700; color:var(--navy); line-height:1.4; }
+.operator-district{ margin:0 0 10px; font-size:0.92rem; color:var(--navy); font-weight:600; }
+.operator-text{ margin:0 0 14px; font-size:0.94rem; }

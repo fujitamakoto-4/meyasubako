@@ -1,11 +1,20 @@
 {
-  "siteName": "まこと目安箱",
+  "siteName": "埼玉14区 目安箱",
   "tagline": "市民と議員のコミュニケーションの在り方をアップデート",
   "heroTitle": "LINEで地元の悩みを\n政治に届ける",
   "heroLead": "議員に会えなくても、\n困りごとはLINEで届きます。\n届いた声と、藤田まことがどう動いたかを、\nここで公開しています。",
+  "heroPhoto": "media/site/hero-dialogue.jpg",
+  "heroPhotoAlt": "街頭で住民の声に耳を傾ける藤田まこと",
+  "heroPhotoCaption": "写真：藤田まこと公式サイト",
+  "memberName": "藤田まこと",
+  "memberTitle": "衆議院議員",
+  "party": "自由民主党",
+  "district": "埼玉14区（草加市・八潮市・三郷市）",
+  "districtShort": "草加・八潮・三郷",
+  "profilePhoto": "media/site/profile.jpg",
+  "profileText": "埼玉14区（草加市・八潮市・三郷市）選出の衆議院議員。経営者として、またがん治療の当事者として現場を知る立場から、「長寿×経済・社会保障」「がん・治療と仕事の両立」「地域の暮らしと安全」の3本柱に取り組んでいます。地元で暮らすみなさんの困りごとをLINEで受け止め、どう動いたかをこのサイトで公開しています。",
   "lineAddFriendUrl": "https://lin.ee/o4zC0lr",
-  "officeName": "衆議院議員 藤田まこと事務所",
+  "officeName": "自由民主党 衆議院議員 藤田まこと事務所",
   "officeUrl": "https://fujitamakoto.com/",
-  "district": "埼玉14区（草加・八潮・三郷）",
   "repoUrl": "https://github.com/fujitamakoto-4/meyasubako"
 }
