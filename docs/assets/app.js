@@ -374,11 +374,18 @@
     var rows = STATS.monthly || [];
     var months = rows.map(function(r){ return parseInt(r.month.split('-')[1],10) + '月'; });
     var values = rows.map(function(r){ return r.count; });
-    var max = Math.max.apply(null, values.concat([1]));
-    var w = 640, h = 220, padL = 30, padB = 30, padT = 20;
-    var chartW = w - padL - 10;
+    var axis = niceAxis(Math.max.apply(null, values.concat([0])));
+    var max = axis.max;
+    var w = 640, h = 230, padL = 36, padB = 30, padT = 16, padR = 10;
+    var chartW = w - padL - padR;
     var chartH = h - padT - padB;
     var bw = values.length ? chartW / values.length : chartW;
+    var grid = '';
+    axisTicks(axis).forEach(function(t){
+      var y = padT + chartH - (t/max)*chartH;
+      grid += '<line x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (w-padR) + '" y2="' + y.toFixed(1) + '" stroke="' + (t===0 ? '#b9cdee' : '#e3ecf9') + '" stroke-width="1"></line>';
+      grid += '<text x="' + (padL-6) + '" y="' + (y+4).toFixed(1) + '" text-anchor="end" font-size="11" fill="#5a6b85">' + t + '</text>';
+    });
     var bars = '';
     for (var i=0;i<values.length;i++){
       var bh = (values[i]/max) * chartH;
@@ -389,23 +396,60 @@
       bars += '<text x="' + (x + bwActual/2).toFixed(1) + '" y="' + (y - 6).toFixed(1) + '" text-anchor="middle" font-size="12" fill="#0b2a5b" font-weight="700">' + values[i] + '</text>';
       bars += '<text x="' + (x + bwActual/2).toFixed(1) + '" y="' + (h - padB + 18).toFixed(1) + '" text-anchor="middle" font-size="12" fill="#5a6b85">' + months[i] + '</text>';
     }
-    var axis = '<line x1="' + padL + '" y1="' + (padT+chartH) + '" x2="' + (w-10) + '" y2="' + (padT+chartH) + '" stroke="#d3e0f5" stroke-width="1"></line>';
-    return '<svg class="bar-chart" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="月次受付件数の推移">' + axis + bars + '</svg>';
+    return '<svg class="bar-chart" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="月次受付件数の推移">' + grid + bars + '</svg>';
   }
 
-  function horizBars(rows){
-    var max = Math.max.apply(null, rows.map(function(r){ return r.v; }).concat([1]));
-    return '<div class="stat-bars">' + rows.map(function(r){
-      var pct = Math.round((r.v/max)*100);
-      return '<div class="stat-bar-row"><span class="stat-bar-label">' + esc(r.k) + '</span>' +
-        '<div class="stat-bar-track"><div class="stat-bar-fill" style="width:' + pct + '%"></div></div>' +
-        '<span class="stat-bar-value">' + r.v + '件</span></div>';
-    }).join('') + '</div>';
+  // 軸の上限を「きりのよい数」にそろえる（最大値が常に右端いっぱいにならないようにする）
+  // 4分割または5分割で、最大値より大きい最小の上限を選ぶ
+  function niceAxis(maxVal){
+    var target = Math.max(Number(maxVal)||0, 1);
+    var steps = [1,2,5,10,20,25,50,100,200,250,500,1000,2000,2500,5000,10000,20000,25000,50000,100000];
+    var best = null;
+    [5,4].forEach(function(seg){
+      for (var i=0;i<steps.length;i++){
+        var m = seg*steps[i];
+        if (m > target){
+          if (!best || m < best.max) best = { max:m, step:steps[i], seg:seg };
+          break;
+        }
+      }
+    });
+    return best || { max:target, step:target, seg:1 };
+  }
+
+  function axisTicks(axis){
+    var ticks = [];
+    for (var v=0; v<=axis.max; v+=axis.step){ ticks.push(v); }
+    return ticks;
+  }
+
+  function horizBars(rows, axis){
+    axis = axis || niceAxis(Math.max.apply(null, rows.map(function(r){ return r.v; }).concat([0])));
+    var ticks = axisTicks(axis);
+    var grid = ticks.map(function(t){
+      var pct = (t/axis.max)*100;
+      return '<span class="stat-grid-line" style="left:' + pct.toFixed(2) + '%"></span>';
+    }).join('');
+    var tickLabels = ticks.map(function(t){
+      var pct = (t/axis.max)*100;
+      return '<span class="stat-tick" style="left:' + pct.toFixed(2) + '%">' + t + '</span>';
+    }).join('');
+    return '<div class="stat-bars">' +
+      '<div class="stat-bar-row stat-axis-row" aria-hidden="true"><span></span><div class="stat-axis">' + tickLabels + '</div><span></span></div>' +
+      rows.map(function(r){
+        var pct = Math.min(100, (r.v/axis.max)*100);
+        return '<div class="stat-bar-row"><span class="stat-bar-label">' + esc(r.k) + '</span>' +
+          '<div class="stat-bar-track">' + grid + '<div class="stat-bar-fill" style="width:' + pct.toFixed(2) + '%"></div></div>' +
+          '<span class="stat-bar-value">' + r.v + '件</span></div>';
+      }).join('') +
+      '<p class="stat-axis-note">目盛りの上限：' + axis.max + '件（カテゴリ別・市別で共通）</p>' +
+    '</div>';
   }
 
   function renderStats(){
     var catRows = Object.keys(STATS.byCategory||{}).map(function(k){ return { k:k, v:STATS.byCategory[k] }; });
     var cityRows = Object.keys(STATS.byCity||{}).map(function(k){ return { k:k, v:STATS.byCity[k] }; });
+    var sharedAxis = niceAxis(Math.max.apply(null, catRows.concat(cityRows).map(function(r){ return r.v; }).concat([0])));
     return '' +
     '<div class="wrap">' +
       '<section style="margin-top:36px;">' +
@@ -415,15 +459,15 @@
         '</div>' +
         '<div class="chart-card">' +
           '<h3>月次推移（受付件数）</h3>' +
-          monthlyBarChart() +
+          '<div class="chart-scroll">' + monthlyBarChart() + '</div>' +
         '</div>' +
         '<div class="chart-card">' +
           '<h3>カテゴリ別内訳</h3>' +
-          horizBars(catRows) +
+          horizBars(catRows, sharedAxis) +
         '</div>' +
         '<div class="chart-card">' +
           '<h3>市別内訳</h3>' +
-          horizBars(cityRows) +
+          horizBars(cityRows, sharedAxis) +
         '</div>' +
       '</section>' +
     '</div>';
