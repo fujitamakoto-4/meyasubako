@@ -6,7 +6,7 @@ category: 地域経済・中小企業
 city: 八潮市
 month: 2026-05
 summary: 塗料原料が輸入できずリフォーム工事が止まった八潮の業者の声を、省庁への直接ヒアリングにつなげました。
-receiptIds: []
+receiptIds: ["L-2026-002"]
 sources: 藤田まこと事務所の対応記録（2026年5月）
 note: 事実確認前
 publishedAt: 2026-08-18
