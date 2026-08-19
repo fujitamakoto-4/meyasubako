@@ -68,7 +68,11 @@
   }
 
   function caseCard(c){
+    var thumbHtml = c.hero
+      ? '<div class="card-thumb"><img src="' + esc(c.hero) + '" alt="' + esc(c.heroAlt||'') + '" loading="lazy"></div>'
+      : '';
     var inner =
+      thumbHtml +
       '<div class="chip-row">' + categoryChip(c.category) + '</div>' +
       '<h3 class="card-title">' + esc(c.title) + '</h3>' +
       '<p class="card-lead">' + esc(c.summary) + '</p>' +
@@ -222,13 +226,53 @@
     '</div>';
   }
 
+  function storyBlock(b){
+    if (b.type === 'img') {
+      return '<figure class="story-image"><img src="' + esc(b.src) + '" alt="' + esc(b.alt||'') + '" loading="lazy">' +
+        (b.caption ? '<figcaption>' + esc(b.caption) + '</figcaption>' : '') +
+        '</figure>';
+    }
+    return '<p>' + esc(b.text) + '</p>';
+  }
+
+  function caseHeroHtml(c){
+    if (!c.hero) return '';
+    return '<figure class="case-hero"><img src="' + esc(c.hero) + '" alt="' + esc(c.heroAlt||'') + '" loading="lazy">' +
+      (c.heroCaption ? '<figcaption>' + esc(c.heroCaption) + '</figcaption>' : '') +
+      '</figure>';
+  }
+
+  function caseVideoHtml(c){
+    if (!c.videoId) return '';
+    var thumbUrl = 'https://i.ytimg.com/vi/' + encodeURIComponent(c.videoId) + '/hqdefault.jpg';
+    var watchUrl = c.video || ('https://www.youtube.com/watch?v=' + c.videoId);
+    var altText = c.videoCaption || c.title || '動画サムネイル';
+    return '' +
+    '<figure class="case-video">' +
+      '<a href="' + esc(watchUrl) + '" target="_blank" rel="noopener" class="video-thumb-link" aria-label="YouTubeで動画を見る（新しいタブで開きます）">' +
+        '<span class="video-thumb-wrap">' +
+          '<img src="' + esc(thumbUrl) + '" alt="' + esc(altText) + '" loading="lazy" onerror="this.parentElement.classList.add(&#39;thumb-error&#39;)">' +
+          '<span class="video-play-badge" aria-hidden="true">▶</span>' +
+          '<span class="video-thumb-fallback">動画サムネイルを読み込めませんでした</span>' +
+        '</span>' +
+      '</a>' +
+      '<figcaption>' +
+        (c.videoCaption ? esc(c.videoCaption) + '　' : '') +
+        '<a href="' + esc(watchUrl) + '" target="_blank" rel="noopener">YouTubeで見る</a>' +
+      '</figcaption>' +
+    '</figure>';
+  }
+
   function renderCaseDetail(slug){
     var c = bySlug(slug);
     if (!c){
       return '<div class="wrap"><section style="margin-top:36px;"><p>事例が見つかりませんでした。まだ公開されていないか、下書きの段階です。</p><a href="#/cases" class="back-link">← 解決事例に戻る</a></section></div>';
     }
     var steps = (c.steps||[]).map(function(s,i){
-      return '<div class="story-step"><div class="story-marker">' + (i+1) + '</div><div class="story-body"><h3>' + esc(s.h) + '</h3><p>' + esc(s.p) + '</p></div></div>';
+      var bodyHtml = (s.blocks && s.blocks.length)
+        ? s.blocks.map(storyBlock).join('')
+        : '<p>' + esc(s.p) + '</p>';
+      return '<div class="story-step"><div class="story-marker">' + (i+1) + '</div><div class="story-body"><h3>' + esc(s.h) + '</h3>' + bodyHtml + '</div></div>';
     }).join('');
 
     var relatedVoices = (c.receiptIds||[]).map(byVoiceId).filter(function(v){ return !!v; });
@@ -253,6 +297,8 @@
           '<h1>' + esc(c.title) + '</h1>' +
           '<div class="article-meta-row" style="color:var(--muted);font-size:0.86rem;">' + esc(c.city) + '　｜　受付：' + formatMonth(c.month) + '</div>' +
         '</div>' +
+        caseHeroHtml(c) +
+        caseVideoHtml(c) +
         '<div class="story-list">' + steps + '</div>' +
         '<p class="article-footnote">出典：' + esc(c.sources||'') + '</p>' +
         relatedHtml +
